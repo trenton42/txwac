@@ -24,7 +24,7 @@ setup(
         open('README.rst').read() + '\n\n' +
         open('HISTORY.rst').read()
     ),
-    py_modules=['wac'],
+    py_modules=['txwac'],
     package_data={'': ['LICENSE']},
     include_package_data=True,
     tests_require=[
