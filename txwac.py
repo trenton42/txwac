@@ -14,7 +14,7 @@ import urlparse
 import treq
 from twisted.internet import defer
 
-__version__ = '0.1'
+__version__ = '0.2'
 
 __all__ = [
     'Config',
@@ -750,7 +750,9 @@ class Pagination(object):
         current = yield self.current
         if not current.previous:
             defer.returnValue(None)
-        self._current = self._current.previous
+        resp = yield self.resource_cls.client.get(self._current.previous)
+        page = self.resource_cls.page_cls(self.resource_cls, **resp.data)
+        self._current = page
         defer.returnValue(self._current)
 
     @defer.inlineCallbacks
@@ -758,7 +760,9 @@ class Pagination(object):
         current = yield self.current
         if not current.next:
             defer.returnValue(None)
-        self._current = self._current.next
+        resp = yield self.resource_cls.client.get(self._current.next)
+        page = self.resource_cls.page_cls(self.resource_cls, **resp.data)
+        self._current = page
         defer.returnValue(self._current)
 
     def __iter__(self):
